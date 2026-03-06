@@ -1,7 +1,7 @@
 {
   "name": "opencode-refactor-agent",
   "version": "0.1.0",
-  "description": "OpenCode plugin that adds a merge-safe primary refactor agent.",
+  "description": "OpenCode plugin with a CLI installer. Note: npm install/bun add only installs the package; run `npx opencode-refactor-agent install` to configure OpenCode.",
   "type": "module",
   "bin": {
     "opencode-refactor-agent": "dist/cli.js"
@@ -20,6 +20,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "bun test",
+    "postinstall": "node -e \"console.log('opencode-refactor-agent installed. Do you want to continue setup?'); console.log('To continue, run: npx opencode-refactor-agent install'); console.log('With Bun, run: bunx opencode-refactor-agent install');\"",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build && npm run test"
   },

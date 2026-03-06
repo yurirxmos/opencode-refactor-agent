@@ -1,6 +1,18 @@
 # opencode-refactor-agent
 
-Plugin do OpenCode que adiciona um agente primário `refactor` e o comando `/refactor`.
+Add a safe `refactor` primary agent to OpenCode without replacing `build` or `plan`.
+
+## Why use this
+
+- Review-first workflow: analyze before editing.
+- Safer changes: asks for explicit confirmation before applying refactors.
+- Better focus: choose `legibility`, `performance`, or `maintainability`.
+- Keeps behavior stable: designed for low-risk, incremental improvements.
+
+## Refactor vs Build
+
+- Use `refactor` when you want to improve code quality without changing features.
+- Use `build` when you want to implement or change functionality directly.
 
 ## Installation
 
@@ -8,19 +20,29 @@ Plugin do OpenCode que adiciona um agente primário `refactor` e o comando `/ref
 npx opencode-refactor-agent@latest install
 ```
 
-Isso adiciona `opencode-refactor-agent@latest` ao seu `~/.config/opencode/opencode.json`.
+Important: `npm install opencode-refactor-agent` or `bun add opencode-refactor-agent` only installs the package.
+It does not configure OpenCode automatically.
+Run `npx opencode-refactor-agent@latest install` (or `bunx opencode-refactor-agent@latest install`) to enable the plugin.
 
-## Usage
+This adds `opencode-refactor-agent@latest` to `~/.config/opencode/opencode.json`.
 
-Depois da instalação, rode:
+## Quick start
+
+Check that the agent is available:
 
 ```bash
 opencode agent list
 ```
 
-Você deve ver o agente `refactor` junto com `build` e `plan`.
+You should see `refactor (primary)` together with `build` and `plan`.
 
-Comandos disponíveis:
+Run your first refactor:
+
+```text
+/refactor src/services/user
+```
+
+## Commands
 
 ```text
 /refactor <scope>
@@ -30,8 +52,6 @@ Comandos disponíveis:
 ```
 
 ## Manual config
-
-Você também pode adicionar manualmente no `opencode.json`:
 
 ```json
 {
