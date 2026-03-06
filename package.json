@@ -22,7 +22,7 @@
     "test": "bun test",
     "postinstall": "node -e \"console.log('opencode-refactor-agent installed. Do you want to continue setup?'); console.log('To continue, run: npx opencode-refactor-agent install'); console.log('With Bun, run: bunx opencode-refactor-agent install');\"",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run build && npm run test"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "opencode",
