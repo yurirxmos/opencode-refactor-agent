@@ -1,6 +1,6 @@
 {
   "name": "opencode-refactor-agent",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "OpenCode plugin with a CLI installer. Note: npm install/bun add only installs the package; run `npx opencode-refactor-agent install` to configure OpenCode.",
   "type": "module",
   "bin": {
