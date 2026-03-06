@@ -24,6 +24,41 @@ interface ParsedArgs {
   configPath?: string;
 }
 
+interface ParsedConfigOption {
+  configPath: string;
+  consumedArguments: number;
+}
+
+function parseConfigOption(rest: string[], index: number): ParsedConfigOption | null {
+  const argument = rest[index];
+
+  if (argument === "--config") {
+    const value = rest[index + 1];
+    if (!value) {
+      throw new Error("Missing value for --config");
+    }
+
+    return {
+      configPath: value,
+      consumedArguments: 2,
+    };
+  }
+
+  if (argument.startsWith("--config=")) {
+    const value = argument.slice("--config=".length);
+    if (!value) {
+      throw new Error("Missing value for --config");
+    }
+
+    return {
+      configPath: value,
+      consumedArguments: 1,
+    };
+  }
+
+  return null;
+}
+
 function parseArgs(argv: string[]): ParsedArgs {
   if (argv.length === 0 || argv[0] === "-h" || argv[0] === "--help" || argv[0] === "help") {
     return { command: "help" };
@@ -39,14 +74,19 @@ function parseArgs(argv: string[]): ParsedArgs {
 
   for (let index = 0; index < rest.length; index += 1) {
     const argument = rest[index];
-    if (argument === "--config") {
-      const value = rest[index + 1];
-      if (!value) {
-        throw new Error("Missing value for --config");
+    const configOption = parseConfigOption(rest, index);
+    if (configOption) {
+      if (configPath) {
+        throw new Error("Duplicate --config argument");
       }
-      configPath = value;
-      index += 1;
+
+      configPath = configOption.configPath;
+      index += configOption.consumedArguments - 1;
       continue;
+    }
+
+    if (argument.startsWith("--")) {
+      throw new Error(`Unknown option: ${argument}`);
     }
 
     if (!target) {

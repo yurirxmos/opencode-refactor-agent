@@ -64,6 +64,29 @@ export interface MutableConfig {
   command?: Record<string, CommandConfig | undefined>;
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function mergeAgentConfig(defaultConfig: AgentConfig, existingConfig: AgentConfig): AgentConfig {
+  const mergedConfig: AgentConfig = { ...defaultConfig };
+
+  for (const [key, value] of Object.entries(existingConfig)) {
+    const defaultValue = mergedConfig[key];
+    if (isPlainObject(defaultValue) && isPlainObject(value)) {
+      mergedConfig[key] = {
+        ...defaultValue,
+        ...value,
+      };
+      continue;
+    }
+
+    mergedConfig[key] = value;
+  }
+
+  return mergedConfig;
+}
+
 const DEFAULT_REFACTOR_AGENT: AgentConfig = {
   description: "orchestrates safe refactors to improve code quality.",
   mode: "primary",
@@ -106,10 +129,10 @@ export function applyRefactorAgentConfig(config: MutableConfig): void {
   const configuredAgents = config.agent ?? {};
   const existingRefactorAgent = configuredAgents[REFACTOR_AGENT_NAME] ?? {};
 
-  configuredAgents[REFACTOR_AGENT_NAME] = {
-    ...DEFAULT_REFACTOR_AGENT,
-    ...existingRefactorAgent,
-  };
+  configuredAgents[REFACTOR_AGENT_NAME] = mergeAgentConfig(
+    DEFAULT_REFACTOR_AGENT,
+    existingRefactorAgent,
+  );
 
   config.agent = configuredAgents;
 
